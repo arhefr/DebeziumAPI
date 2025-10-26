@@ -1,4 +1,4 @@
-package debezium_client
+package debeziumclient
 
 import (
 	"net/http"

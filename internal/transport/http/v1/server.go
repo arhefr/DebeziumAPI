@@ -3,23 +3,41 @@ package v1
 import (
 	"context"
 	"net/http"
-	"strconv"
+	"time"
+)
+
+const (
+	user       = "/api/v1/user"
+	userGet    = "GET " + user + "/getUser"
+	userGetAll = "GET " + user + "/getUsers"
+	userSave   = "POST " + user + "/saveUser"
+	userUpdate = "POST " + user + "/updateUser"
+	userDelete = "DELETE " + user + "/deleteUser"
+)
+
+const (
+	defaultReadHeaderTimeout = 5 * time.Second
 )
 
 type Server struct {
 	srv *http.Server
 }
 
-func NewServer(port int) *Server {
+func NewServer(port string) *Server {
 	srv := http.Server{
-		Addr:    ":" + strconv.Itoa(port),
-		Handler: nil,
+		Addr:              ":" + port,
+		Handler:           nil,
+		ReadHeaderTimeout: defaultReadHeaderTimeout,
 	}
 	return &Server{srv: &srv}
 }
 
-func (s *Server) RegisterHandlers() error {
-	http.HandleFunc("GET /api/v1/users", func(w http.ResponseWriter, r *http.Request) {})
+func (s *Server) RegisterHandlers(handler *Handler) error {
+	http.HandleFunc(userGet, handler.GetUser)
+	http.HandleFunc(userGetAll, handler.GetUsers)
+	http.HandleFunc(userSave, handler.SaveUser)
+	http.HandleFunc(userUpdate, handler.UpdateUser)
+	http.HandleFunc(userDelete, handler.DeleteUser)
 
 	return nil
 }

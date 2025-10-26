@@ -1,4 +1,4 @@
-package debezium_client
+package debeziumclient
 
 type GetConnectorsResponse struct {
 	Connectors []struct {
@@ -6,12 +6,12 @@ type GetConnectorsResponse struct {
 			Name      string `json:"name"`
 			Connector struct {
 				State    string `json:"state"`
-				WorkerId string `json:"worker_id"`
+				WorkerID string `json:"worker_ID"`
 			} `json:"connector"`
 			Tasks []struct {
-				Id       int    `json:"id"`
+				ID       int    `json:"ID"`
 				State    string `json:"state"`
-				WorkerId string `json:"worker_id"`
+				WorkerID string `json:"worker_ID"`
 			} `json:"tasks"`
 			Type string `json:"type"`
 		} `json:"status"`
@@ -56,21 +56,21 @@ type TaskInfo struct {
 }
 
 type ConnectorStatus struct {
-	Name      string          `json:"name"`
-	Connector ConnectorState  `json:"connector"`
-	Tasks     []TaskState     `json:"tasks"`
-	Type      string          `json:"type"`
+	Name      string         `json:"name"`
+	Connector ConnectorState `json:"connector"`
+	Tasks     []TaskState    `json:"tasks"`
+	Type      string         `json:"type"`
 }
 
 type ConnectorState struct {
 	State    string `json:"state"`
-	WorkerId string `json:"worker_id"`
+	WorkerID string `json:"worker_ID"`
 }
 
 type TaskState struct {
-	Id       int    `json:"id"`
+	ID       int    `json:"ID"`
 	State    string `json:"state"`
-	WorkerId string `json:"worker_id"`
+	WorkerID string `json:"worker_ID"`
 	Trace    string `json:"trace,omitempty"`
 }
 
