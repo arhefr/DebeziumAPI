@@ -1,3 +1,4 @@
 config/.env
 config/.settings.json.example
 config/.settings.yaml.example
+.golangci.yml
