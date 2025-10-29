@@ -18,10 +18,10 @@ var (
 )
 
 type UserRepository interface {
-	Select(ctx context.Context, offset, limit int) ([]models.User, error)
+	Select(ctx context.Context, offset, limit int) ([]*models.User, error)
 	SelectByID(ctx context.Context, userID *models.UserID) (*models.User, error)
-	Insert(ctx context.Context, userCU *models.UserCU) (*models.User, error)
-	Update(ctx context.Context, userCU *models.UserCU) error
+	Insert(ctx context.Context, userCU *models.UserCreate) (*models.User, error)
+	Update(ctx context.Context, userCU *models.UserUpdate) error
 	Delete(ctx context.Context, userID *models.UserID) error
 }
 
@@ -42,7 +42,7 @@ func (s *UserService) GetUser(ctx context.Context, userID *models.UserID) (*mode
 	return users, err
 }
 
-func (s *UserService) GetUsers(ctx context.Context, offset, limit int) ([]models.User, error) {
+func (s *UserService) GetUsers(ctx context.Context, offset, limit int) ([]*models.User, error) {
 
 	if offset == 0 {
 		offset = defaultOffset
@@ -56,7 +56,7 @@ func (s *UserService) GetUsers(ctx context.Context, offset, limit int) ([]models
 	return user, err
 }
 
-func (s *UserService) SaveUser(ctx context.Context, userCU *models.UserCU) (*models.User, error) {
+func (s *UserService) SaveUser(ctx context.Context, userCU *models.UserCreate) (*models.User, error) {
 
 	if userCU.Email == "" || userCU.Name == "" || len(userCU.Role) == 0 {
 		return nil, ErrMissingRequiredFields
@@ -70,7 +70,7 @@ func (s *UserService) DeleteUser(ctx context.Context, userID *models.UserID) err
 	return s.repo.Delete(ctx, userID)
 }
 
-func (s *UserService) UpdateUser(ctx context.Context, userCU *models.UserCU) error {
+func (s *UserService) UpdateUser(ctx context.Context, userCU *models.UserUpdate) error {
 
 	if userCU.Email == "" && userCU.Name == "" && len(userCU.Role) == 0 && userCU.LastName == "" {
 		return ErrMissingRequiredFields

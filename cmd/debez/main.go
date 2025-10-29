@@ -27,10 +27,10 @@ func main() {
 
 	pp, err := postgrespool.NewPool(context.TODO(), cfg.PostgresConfig)
 	if err != nil {
-		panic(err)
+		// panic(err)
 	}
 
-	logger, err := logger.NewLogger(zapcore.DebugLevel)
+	log, err := logger.NewLogger(zapcore.DebugLevel)
 	if err != nil {
 		panic(err)
 	}
@@ -46,7 +46,7 @@ func main() {
 
 		httpServer := httpV1.NewServer(cfg.HTTPServerConfig.Port)
 
-		if err := httpServer.RegisterHandlers(httpHandler); err != nil {
+		if err := httpServer.RegisterHandlers(log, httpHandler); err != nil {
 			panic(err)
 		}
 
@@ -59,7 +59,7 @@ func main() {
 
 		grpcHandler := grpcV1.NewHandler(us)
 
-		grpcServer := grpcV1.NewServer(logger)
+		grpcServer := grpcV1.NewServer(log)
 
 		grpcServer.RegisterServices(grpcHandler)
 

@@ -12,6 +12,15 @@ message User {
   repeated string role = 5;
 }
 
+message Users {
+  repeated User users = 1;
+}
+
+message GetUsersRequest {
+  int32 offset = 1;
+  int32 limit = 2;
+}
+
 message CreateUserRequest {
   string email = 1;
   string name = 2;
@@ -19,7 +28,25 @@ message CreateUserRequest {
   repeated string role = 4;
 }
 
+message UpdateUserRequest {
+  string id = 1;
+  string email = 2;
+  string name = 3;
+  string lastName = 4;
+  repeated string role = 5;
+}
+
+message UserID {
+  string id = 1;
+}
+
+message Void {}
+
 service UserService {
   rpc CreateUser(CreateUserRequest) returns (User);
+  rpc GetUser(UserID) returns (User);
+  rpc GetUsers(GetUsersRequest) returns (Users);
+  rpc UpdateUser(UpdateUserRequest) returns (Void);
+  rpc DeleteUser(UserID) returns (Void);
 }
 

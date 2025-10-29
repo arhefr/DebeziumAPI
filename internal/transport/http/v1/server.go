@@ -2,6 +2,7 @@ package v1
 
 import (
 	"context"
+	"debez/pkg/logger"
 	"net/http"
 	"time"
 )
@@ -29,15 +30,21 @@ func NewServer(port string) *Server {
 		Handler:           nil,
 		ReadHeaderTimeout: defaultReadHeaderTimeout,
 	}
+
 	return &Server{srv: &srv}
 }
 
-func (s *Server) RegisterHandlers(handler *Handler) error {
-	http.HandleFunc(userGet, handler.GetUser)
-	http.HandleFunc(userGetAll, handler.GetUsers)
-	http.HandleFunc(userSave, handler.SaveUser)
-	http.HandleFunc(userUpdate, handler.UpdateUser)
-	http.HandleFunc(userDelete, handler.DeleteUser)
+func (s *Server) RegisterHandlers(log logger.Logger, handler *Handler) error {
+
+	mux := http.NewServeMux()
+
+	mux.HandleFunc(userGet, handler.GetUser)
+	mux.HandleFunc(userGetAll, handler.GetUsers)
+	mux.HandleFunc(userSave, handler.SaveUser)
+	mux.HandleFunc(userUpdate, handler.UpdateUser)
+	mux.HandleFunc(userDelete, handler.DeleteUser)
+
+	s.srv.Handler = AddMetadata(RegistLoggerMiddleware(log, LoggingMiddleware(mux)))
 
 	return nil
 }

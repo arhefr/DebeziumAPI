@@ -24,14 +24,14 @@ func (h *Handler) GetUsers(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) SaveUser(w http.ResponseWriter, r *http.Request) {
-	var userCU models.UserCU
+	var userC models.UserCreate
 
-	if err := json.NewDecoder(r.Body).Decode(&userCU); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&userC); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	user, err := h.service.SaveUser(r.Context(), &userCU)
+	user, err := h.service.SaveUser(r.Context(), &userC)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -63,14 +63,14 @@ func (h *Handler) GetUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) UpdateUser(w http.ResponseWriter, r *http.Request) {
-	var userCU models.UserCU
+	var userU models.UserUpdate
 
-	if err := json.NewDecoder(r.Body).Decode(&userCU); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&userU); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	if err := h.service.UpdateUser(r.Context(), &userCU); err != nil {
+	if err := h.service.UpdateUser(r.Context(), &userU); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}

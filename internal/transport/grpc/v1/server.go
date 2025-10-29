@@ -12,9 +12,12 @@ type Server struct {
 	grpc *grpc.Server
 }
 
-func NewServer(logger logger.Logger) *Server {
+func NewServer(log logger.Logger) *Server {
 	srv := grpc.NewServer(
-		grpc.ChainUnaryInterceptor(),
+		grpc.ChainUnaryInterceptor(
+			RegistLoggerInterceptor(log),
+			LoggerInterceptor(),
+		),
 	)
 
 	return &Server{grpc: srv}

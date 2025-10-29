@@ -2,13 +2,20 @@ package postgrespool
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"time"
 
 	"debez/pkg/utils"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+)
+
+var (
+	ErrConnPostgres = "error cannot connecting to postgres pool with `postgres://%s:%s@%s:%s/%s`"
+)
+
+const (
+	defaultConnTimeout = 5 * time.Second
 )
 
 func NewPool(ctx context.Context, cfg *Config) (pool *pgxpool.Pool, err error) {
@@ -18,7 +25,7 @@ func NewPool(ctx context.Context, cfg *Config) (pool *pgxpool.Pool, err error) {
 
 	err = utils.DoWithTries(func() error {
 
-		ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+		ctx, cancel := context.WithTimeout(ctx, defaultConnTimeout)
 		defer cancel()
 
 		pool, err = pgxpool.New(ctx, connStr)
@@ -30,8 +37,11 @@ func NewPool(ctx context.Context, cfg *Config) (pool *pgxpool.Pool, err error) {
 	}, cfg.MaxAttemps, cfg.DelayAttemps)
 
 	if err != nil {
-		return nil, errors.Join(err, fmt.Errorf("cannot connecting to postgres pool with `postgres://%s:%s@%s:%s/%s`",
-			cfg.User, "<password>", cfg.Host, cfg.Port, cfg.Database))
+		return nil, fmt.Errorf(ErrConnPostgres, cfg.User, "<password>", cfg.Host, cfg.Port, cfg.Database)
+	}
+
+	if err := pool.Ping(ctx); err != nil {
+		return nil, fmt.Errorf(ErrConnPostgres, cfg.User, "<password>", cfg.Host, cfg.Port, cfg.Database)
 	}
 
 	return pool, nil

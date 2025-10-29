@@ -8,8 +8,15 @@ type User struct {
 	Role     []string `json:"role"`
 }
 
-// User Create/Update
-type UserCU struct {
+type UserCreate struct {
+	Name     string   `json:"name"`
+	LastName string   `json:"last_name"`
+	Email    string   `json:"email"`
+	Role     []string `json:"role"`
+}
+
+type UserUpdate struct {
+	ID       string   `json:"id"`
 	Name     string   `json:"name"`
 	LastName string   `json:"last_name"`
 	Email    string   `json:"email"`

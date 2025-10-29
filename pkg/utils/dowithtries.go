@@ -5,9 +5,9 @@ import (
 	"time"
 )
 
-func DoWithTries(fn func() error, attemps int64, delay time.Duration) (err error) {
-	for i := attemps; i > 0; i-- {
-		if err = fn(); err != nil {
+func DoWithTries(fn func() error, attemps int, delay time.Duration) error {
+	for i := 0; i < attemps; i++ {
+		if err := fn(); err != nil {
 			time.Sleep(delay)
 			continue
 		}

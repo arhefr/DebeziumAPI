@@ -2,16 +2,25 @@ package v1
 
 import (
 	"context"
-	"debez/internal/models"
 	"debez/pkg/contract"
 )
 
 func (h *Handler) CreateUser(ctx context.Context, in *contract.CreateUserRequest) (*contract.User, error) {
+	return nil, nil
+}
 
-	user, err := h.us.SaveUser(ctx, &models.UserCU{Name: in.Name, LastName: in.LastName, Email: in.Email, Role: in.Role})
-	if err != nil {
-		return nil, err
-	}
+func (h *Handler) GetUser(ctx context.Context, in *contract.UserID) (*contract.User, error) {
+	return nil, nil
+}
 
-	return &contract.User{Id: user.ID, Name: user.Name, LastName: user.LastName, Email: user.Email, Role: user.Role}, nil
+func (h *Handler) GetUsers(ctx context.Context, in *contract.GetUsersRequest) (*contract.Users, error) {
+	return nil, nil
+}
+
+func (h *Handler) UpdateUser(ctx context.Context, in *contract.UpdateUserRequest) (*contract.Void, error) {
+	return nil, nil
+}
+
+func (h *Handler) DeleteUser(ctx context.Context, in *contract.UserID) (*contract.Void, error) {
+	return nil, nil
 }

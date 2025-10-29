@@ -10,8 +10,11 @@ import (
 const (
 	loggerKey string = "logger"
 
-	loggerRequestIDKey string = "x-request-id"
-	loggerTraceIDKey   string = "x-trace-id"
+	HeaderRequestIDKey string = "X-Request-ID"
+	HeaderTraceIDKey   string = "X-Trace-ID"
+
+	CtxRequestIDKey string = "x-request-id"
+	CtxTraceIDKey   string = "x-trace-id"
 )
 
 type Logger interface {
@@ -41,41 +44,43 @@ type L struct {
 }
 
 func (l L) Debug(ctx context.Context, msg string, fields ...zap.Field) {
-	requestID, traceID := ctx.Value(loggerRequestIDKey), ctx.Value(loggerTraceIDKey)
 
-	fields = append(fields, zap.Any(loggerRequestIDKey, requestID), zap.Any(loggerTraceIDKey, traceID))
+	requestID, traceID := ctx.Value(CtxRequestIDKey), ctx.Value(CtxTraceIDKey)
+
+	fields = append(fields, zap.Any(CtxRequestIDKey, requestID), zap.Any(CtxTraceIDKey, traceID))
 
 	l.z.Debug(msg, fields...)
 }
 
 func (l L) Info(ctx context.Context, msg string, fields ...zap.Field) {
-	requestID, traceID := ctx.Value(loggerRequestIDKey), ctx.Value(loggerTraceIDKey)
 
-	fields = append(fields, zap.Any(loggerRequestIDKey, requestID), zap.Any(loggerTraceIDKey, traceID))
+	requestID, traceID := ctx.Value(CtxRequestIDKey), ctx.Value(CtxTraceIDKey)
+
+	fields = append(fields, zap.Any(CtxRequestIDKey, requestID), zap.Any(CtxTraceIDKey, traceID))
 
 	l.z.Info(msg, fields...)
 }
 
 func (l L) Warn(ctx context.Context, msg string, fields ...zap.Field) {
-	requestID, traceID := ctx.Value(loggerRequestIDKey), ctx.Value(loggerTraceIDKey)
+	requestID, traceID := ctx.Value(CtxRequestIDKey), ctx.Value(CtxTraceIDKey)
 
-	fields = append(fields, zap.Any(loggerRequestIDKey, requestID), zap.Any(loggerTraceIDKey, traceID))
+	fields = append(fields, zap.Any(CtxRequestIDKey, requestID), zap.Any(CtxTraceIDKey, traceID))
 
 	l.z.Warn(msg, fields...)
 }
 
 func (l L) Error(ctx context.Context, msg string, fields ...zap.Field) {
-	requestID, traceID := ctx.Value(loggerRequestIDKey), ctx.Value(loggerTraceIDKey)
+	requestID, traceID := ctx.Value(CtxRequestIDKey), ctx.Value(CtxTraceIDKey)
 
-	fields = append(fields, zap.Any(loggerRequestIDKey, requestID), zap.Any(loggerTraceIDKey, traceID))
+	fields = append(fields, zap.Any(CtxRequestIDKey, requestID), zap.Any(CtxTraceIDKey, traceID))
 
 	l.z.Error(msg, fields...)
 }
 
 func (l L) Fatal(ctx context.Context, msg string, fields ...zap.Field) {
-	requestID, traceID := ctx.Value(loggerRequestIDKey), ctx.Value(loggerTraceIDKey)
+	requestID, traceID := ctx.Value(CtxRequestIDKey), ctx.Value(CtxTraceIDKey)
 
-	fields = append(fields, zap.Any(loggerRequestIDKey, requestID), zap.Any(loggerTraceIDKey, traceID))
+	fields = append(fields, zap.Any(CtxRequestIDKey, requestID), zap.Any(CtxTraceIDKey, traceID))
 
 	l.z.Fatal(msg, fields...)
 }

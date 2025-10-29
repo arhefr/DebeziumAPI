@@ -15,19 +15,19 @@ func NewUserRepository(pool *pgxpool.Pool) *UserRepository {
 	return &UserRepository{pool: pool}
 }
 
-func (r *UserRepository) Select(ctx context.Context, offset, limit int) ([]models.User, error) {
-	return []models.User{}, nil
+func (r *UserRepository) Select(ctx context.Context, offset, limit int) ([]*models.User, error) {
+	return []*models.User{}, nil
 }
 
 func (r *UserRepository) SelectByID(ctx context.Context, userID *models.UserID) (*models.User, error) {
 	return &models.User{}, nil
 }
 
-func (r *UserRepository) Insert(ctx context.Context, user *models.UserCU) (*models.User, error) {
+func (r *UserRepository) Insert(ctx context.Context, user *models.UserCreate) (*models.User, error) {
 	return &models.User{}, nil
 }
 
-func (r *UserRepository) Update(ctx context.Context, user *models.UserCU) error {
+func (r *UserRepository) Update(ctx context.Context, user *models.UserUpdate) error {
 	return nil
 }
 
