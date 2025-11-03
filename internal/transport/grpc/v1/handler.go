@@ -3,12 +3,12 @@ package v1
 import (
 	"context"
 	"debez/internal/models"
-	"debez/pkg/contract"
+	pb "debez/pkg/contract/proto"
 )
 
 type Handler struct {
 	us UserService
-	contract.UnimplementedUserServiceServer
+	pb.UnimplementedUserServiceServer
 }
 
 type UserService interface {

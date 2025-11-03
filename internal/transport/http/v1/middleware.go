@@ -1,11 +1,8 @@
 package v1
 
 import (
-	"context"
 	"debez/pkg/logger"
 	"net/http"
-
-	"github.com/google/uuid"
 )
 
 const (
@@ -19,21 +16,21 @@ const (
 func AddMetadata(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		traceID := r.Header.Get(string(HeaderTraceIDKey))
-		if traceID == "" {
-			traceID = uuid.NewString()
-		}
+		// traceID := r.Header.Get(string(HeaderTraceIDKey))
+		// if traceID == "" {
+		// 	traceID = uuid.NewString()
+		// }
 
-		requestID := uuid.NewString()
+		// requestID := uuid.NewString()
 
-		r.Header.Set(HeaderTraceIDKey, traceID)
-		r.Header.Set(HeaderRequestIDKey, requestID)
+		// r.Header.Set(HeaderTraceIDKey, traceID)
+		// r.Header.Set(HeaderRequestIDKey, requestID)
 
-		ctx := r.Context()
-		ctx = context.WithValue(ctx, CtxTraceIDKey, traceID)
-		ctx = context.WithValue(ctx, CtxRequestIDKey, requestID)
+		// ctx := r.Context()
+		// ctx = context.WithValue(ctx, CtxTraceIDKey, traceID)
+		// ctx = context.WithValue(ctx, CtxRequestIDKey, requestID)
 
-		next.ServeHTTP(w, r.WithContext(ctx))
+		next.ServeHTTP(w, r)
 	})
 }
 

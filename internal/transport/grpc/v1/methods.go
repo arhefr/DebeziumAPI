@@ -2,25 +2,25 @@ package v1
 
 import (
 	"context"
-	"debez/pkg/contract"
+	pb "debez/pkg/contract/proto"
 )
 
-func (h *Handler) CreateUser(ctx context.Context, in *contract.CreateUserRequest) (*contract.User, error) {
+func (h *Handler) CreateUser(ctx context.Context, in *pb.CreateUserRequest) (*pb.User, error) {
 	return nil, nil
 }
 
-func (h *Handler) GetUser(ctx context.Context, in *contract.UserID) (*contract.User, error) {
+func (h *Handler) GetUser(ctx context.Context, in *pb.UserID) (*pb.User, error) {
 	return nil, nil
 }
 
-func (h *Handler) GetUsers(ctx context.Context, in *contract.GetUsersRequest) (*contract.Users, error) {
+func (h *Handler) GetUsers(ctx context.Context, in *pb.GetUsersRequest) (*pb.Users, error) {
 	return nil, nil
 }
 
-func (h *Handler) UpdateUser(ctx context.Context, in *contract.UpdateUserRequest) (*contract.Void, error) {
+func (h *Handler) UpdateUser(ctx context.Context, in *pb.UpdateUserRequest) (*pb.Void, error) {
 	return nil, nil
 }
 
-func (h *Handler) DeleteUser(ctx context.Context, in *contract.UserID) (*contract.Void, error) {
+func (h *Handler) DeleteUser(ctx context.Context, in *pb.UserID) (*pb.Void, error) {
 	return nil, nil
 }

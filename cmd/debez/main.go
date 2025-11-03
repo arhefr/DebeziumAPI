@@ -8,7 +8,11 @@ import (
 	grpcV1 "debez/internal/transport/grpc/v1"
 	httpV1 "debez/internal/transport/http/v1"
 	"flag"
-	"sync"
+	"fmt"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"debez/pkg/logger"
 	"debez/pkg/postgrespool"
@@ -17,58 +21,75 @@ import (
 )
 
 func main() {
+	// Flags
 	envPath := flag.String("env", "config/.env", "path to the environment file")
 	flag.Parse()
 
+	// Config
 	cfg, err := config.ParseConfig(*envPath)
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
+		os.Exit(1)
 	}
 
-	pp, err := postgrespool.NewPool(context.TODO(), cfg.PostgresConfig)
-	if err != nil {
-		// panic(err)
-	}
-
+	// Logger
 	log, err := logger.NewLogger(zapcore.DebugLevel)
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
+		os.Exit(1)
 	}
 
-	up := repository.NewUserRepository(pp)
+	// Conn to postgres
+	db, err := postgrespool.New(context.Background(), cfg.PostgresConfig)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	// Repository
+	up := repository.NewUserRepository(db.Pool)
+
+	// Service
 	us := service.NewUserService(up)
 
-	var wg sync.WaitGroup
+	// HTTP server
+	httpHandler := httpV1.NewHandler(us)
+	httpServer := httpV1.NewServer(cfg.HTTPServerConfig.Port)
+	if err := httpServer.RegisterHandlers(log, httpHandler); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 
-	wg.Go(func() {
-
-		httpHandler := httpV1.NewHandler(us)
-
-		httpServer := httpV1.NewServer(cfg.HTTPServerConfig.Port)
-
-		if err := httpServer.RegisterHandlers(log, httpHandler); err != nil {
-			panic(err)
-		}
-
+	go func() {
 		if err := httpServer.Start(); err != nil {
-			panic(err)
+			fmt.Println(err)
+			os.Exit(1)
 		}
-	})
+	}()
 
-	wg.Go(func() {
+	// GRPC handler
+	grpcHandler := grpcV1.NewHandler(us)
+	grpcServer := grpcV1.NewServer(log)
+	grpcServer.RegisterServices(grpcHandler)
 
-		grpcHandler := grpcV1.NewHandler(us)
-
-		grpcServer := grpcV1.NewServer(log)
-
-		grpcServer.RegisterServices(grpcHandler)
-
+	go func() {
 		if err := grpcServer.Run(cfg.GRPCServerConfig.Port); err != nil {
-			panic(err)
+			fmt.Println(err)
+			os.Exit(1)
 		}
-	})
+	}()
 
-	wg.Wait()
+	// Graceful shutdown
+	graceSh := make(chan os.Signal, 1)
+	signal.Notify(graceSh, os.Interrupt, syscall.SIGTERM)
+	<-graceSh
+
+	shCtx, cancel := context.WithTimeout(context.Background(), time.Second*5)
+	defer cancel()
+
+	httpServer.Stop(shCtx)
+	grpcServer.Stop()
+	db.Stop()
 }
 
 /*

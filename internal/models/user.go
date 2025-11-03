@@ -1,7 +1,7 @@
 package models
 
 type User struct {
-	ID       string   `json:"id"`
+	ID       int64    `json:"id"`
 	Name     string   `json:"name"`
 	LastName string   `json:"last_name"`
 	Email    string   `json:"email"`
@@ -16,7 +16,7 @@ type UserCreate struct {
 }
 
 type UserUpdate struct {
-	ID       string   `json:"id"`
+	ID       int64    `json:"id"`
 	Name     string   `json:"name"`
 	LastName string   `json:"last_name"`
 	Email    string   `json:"email"`
@@ -24,5 +24,5 @@ type UserUpdate struct {
 }
 
 type UserID struct {
-	ID string `json:"id"`
+	ID int64 `json:"id"`
 }

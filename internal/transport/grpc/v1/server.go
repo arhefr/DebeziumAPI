@@ -1,7 +1,7 @@
 package v1
 
 import (
-	"debez/pkg/contract"
+	pb "debez/pkg/contract/proto"
 	"debez/pkg/logger"
 	"net"
 
@@ -36,6 +36,6 @@ func (s *Server) Stop() {
 	s.grpc.GracefulStop()
 }
 
-func (s *Server) RegisterServices(srv contract.UserServiceServer) {
-	contract.RegisterUserServiceServer(s.grpc, srv)
+func (s *Server) RegisterServices(srv pb.UserServiceServer) {
+	pb.RegisterUserServiceServer(s.grpc, srv)
 }
